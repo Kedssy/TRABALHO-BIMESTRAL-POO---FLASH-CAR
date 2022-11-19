@@ -1,85 +1,82 @@
 package br.com.unipar.flashcar.database.repository;
 
 import br.com.unipar.flashcar.database.DatabaseConnection;
-import br.com.unipar.flashcar.model.Cor;
+import br.com.unipar.flashcar.model.Marca;
+import br.com.unipar.flashcar.model.Modelo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class CorRepository {
+public class ModeloRepository {
+    private String INSERT = "INSERT INTO MODELO(DESCRICAO, ID_MARCA) VALUES (?, ?);";
+    private String UPDATE = "UPDATE MODELO SET DESCRICAO = ?, ID_MARCA = ? WHERE ID = ?;";
+    private String DELETE = "DELETE MODELO WHERE ID = ?;";
+    private String FIND_BY_ID = "SELECT ID, DESCRICAO, ID_MARCA FROM MODELO WHERE ID = ?;";
+    private String FIND_ALL = "SELECT ID, DESCRICAO, ID_MARCA FROM MODELO;";
 
-    private String INSERT
-            = "insert into COR(descricao) values(?);";
-    private String UPDATE
-            = "update COR set descricao = ? where id = ?;";
-    private String DELETE
-            = "delete COR where id = ?;";
-    private String FIND_BY_ID
-            = "select id, descricao from COR where ID = ?;";
-    private String FIND_ALL
-            = "select id, descricao from COR;";
-
-    public void insert(Cor cor) throws SQLException {
+    public void insert(Modelo modelo) throws SQLException {
 
         Connection conn = null;
         PreparedStatement ps = null;
-                
-        try {
 
+        try {
             conn = new DatabaseConnection().getConnection();
 
             ps = conn.prepareStatement(INSERT);
-            ps.setString(1, cor.getDescricao());
+            ps.setString(1, modelo.getDescricao());
+            ps.setInt(2, modelo.getIdMarca());
             ps.executeUpdate();
-
         } finally {
-            if (ps != null)
+            if (ps != null) {
                 ps.close();
-            if (conn != null)
+            }
+            if (conn != null) {
                 conn.close();
+            }
         }
-
     }
-    
-    public ArrayList<Cor> findAll() throws SQLException {
+
+    public ArrayList<Modelo> findAll() throws SQLException {
 
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        ArrayList<Cor> listaResultado = new ArrayList<>();
-                
+        ArrayList<Modelo> listaResultado = new ArrayList<>();
+
         try {
 
             conn = new DatabaseConnection().getConnection();
 
             ps = conn.prepareStatement(FIND_ALL);
             rs = ps.executeQuery();
-            
-            while(rs.next()){
-                
-                Cor cor = new Cor();
-                cor.setDescricao(rs.getString("descricao"));
-                cor.setId(rs.getInt(1));
-                
-                listaResultado.add(cor);
+
+            while (rs.next()) {
+                Modelo modelo = new Modelo();
+                modelo.setDescricao(rs.getString("descricao"));
+                modelo.setIdMarca(rs.getInt("id_marca"));
+                modelo.setId(rs.getInt(1));
+
+                listaResultado.add(modelo);
             }
 
         } finally {
-            if (rs != null)
+            if (rs != null) {
                 rs.close();
-            if (ps != null)
+            }
+            if (ps != null) {
                 ps.close();
-            if (conn != null)
+            }
+            if (conn != null) {
                 conn.close();
+            }
         }
-        
-        return listaResultado;
 
+        return listaResultado;
     }
-    
-    public void delete(Cor cor) throws SQLException {
+
+    public void delete(Modelo modelo) throws SQLException {
 
         Connection conn = null;
         PreparedStatement ps = null;
@@ -89,7 +86,7 @@ public class CorRepository {
             conn = new DatabaseConnection().getConnection();
 
             ps = conn.prepareStatement(DELETE);
-            ps.setInt(1, cor.getId());
+            ps.setInt(1, modelo.getId());
             ps.execute();
 
         } finally {
@@ -101,7 +98,7 @@ public class CorRepository {
 
     }
     
-    public void update(Cor cor) throws SQLException {
+    public void update(Modelo modelo) throws SQLException {
 
         Connection conn = null;
         PreparedStatement ps = null;
@@ -111,8 +108,9 @@ public class CorRepository {
             conn = new DatabaseConnection().getConnection();
 
             ps = conn.prepareStatement(UPDATE);
-            ps.setString(1, cor.getDescricao());
-            ps.setInt(2, cor.getId());
+            ps.setString(1, modelo.getDescricao());
+            ps.setInt(2, modelo.getIdMarca());
+            ps.setInt(3, modelo.getId());
             ps.execute();
 
         } finally {
@@ -124,12 +122,12 @@ public class CorRepository {
 
     }
     
-    public Cor findById(int id) throws SQLException {   
+    public Modelo findById(int id) throws SQLException {   
 
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        Cor resultado = new Cor();
+        Modelo resultado = new Modelo();
                 
         try {
 
@@ -142,6 +140,7 @@ public class CorRepository {
             while(rs.next()){
                 
                 resultado.setDescricao(rs.getString("descricao"));
+                resultado.setIdMarca(rs.getInt("id_marca"));
                 resultado.setId(rs.getInt("id"));
                 
             }
@@ -158,5 +157,4 @@ public class CorRepository {
         return resultado;
 
     }
-
 }

@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Cor {
+public class Marca {
     
     private int id;
-    private String descricao;
+    private String nome;
     
 }

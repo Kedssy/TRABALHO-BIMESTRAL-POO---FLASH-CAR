@@ -7,9 +7,7 @@ import java.sql.SQLException;
 public class DatabaseConnection {
 
     public Connection getConnection() throws SQLException {
-
-        return DriverManager.getConnection("jdbc:h2:~/h2database/flashcar", "", "");
-
+        return DriverManager.getConnection("jdbc:h2:/Users/lucasmichalski/NetBeansProjects/FlashCar/BancoH2/Banco", "", "");
     }
-
+    
 }
